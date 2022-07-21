@@ -12,6 +12,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+import warnings
+
 from . import (
     register_model, register_model_architecture
 )
@@ -21,6 +23,7 @@ from fairseq.models.bert_seq2seq import (
     TransformerDecoderLayer, TransformerEncoder, Transformer_nonautoregressive
 )
 
+warnings.filterwarnings(action='ignore')
 
 @register_model('disco_transformer')
 class DisCoTransformer(Transformer_nonautoregressive):
@@ -159,13 +162,13 @@ class SelfTransformerDecoderQMask(SelfTransformerDecoder):
         q_mask = prev_output_tokens.float().new_zeros([bsz, max_len, max_len])
         # [bsz, max_len, max_len]
         # First generate uniform (0, 1) to determine which words to mask randomly
+        seed = 0
+        self.random = np.random.RandomState(seed)
         if not self.training:
             # evaluation model. Use numpy seed to have the same masking configuration at each epoch.
             random_score = torch.Tensor(self.random.uniform(size = q_mask.shape)).to(q_mask.device)
             cutoff_ratio = torch.Tensor(self.random.uniform(size = [bsz, max_len])).to(q_mask.device)
         else:
-            seed = 0
-            self.random = np.random.RandomState(seed)
             random_score = q_mask.uniform_()
             cutoff_ratio = q_mask.new_zeros([bsz, max_len]).uniform_()
         ## eos and pad cannot see anyone so no information leakage.
