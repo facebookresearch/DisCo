@@ -39,7 +39,7 @@ class TranslationSelfTask(FairseqTask):
     @staticmethod
     def add_args(parser):
         """Add task-specific arguments to the parser."""
-        parser.add_argument('data', nargs='+', help='path(s) to data directorie(s)')
+        # parser.add_argument('data', nargs='+', help='path(s) to data directorie(s)')
         parser.add_argument('-s', '--source-lang', default=None, metavar='SRC',
                             help='source language')
         parser.add_argument('-t', '--target-lang', default=None, metavar='TARGET',
@@ -96,8 +96,8 @@ class TranslationSelfTask(FairseqTask):
         assert src_dict.eos() == tgt_dict.eos()
         assert src_dict.unk() == tgt_dict.unk()
         assert src_dict.mask() == tgt_dict.mask()
-        print('| [{}] dictionary: {} types'.format(args.source_lang, len(src_dict)))
-        print('| [{}] dictionary: {} types'.format(args.target_lang, len(tgt_dict)))
+        # print('| [{}] dictionary: {} types'.format(args.source_lang, len(src_dict)))
+        # print('| [{}] dictionary: {} types'.format(args.target_lang, len(tgt_dict)))
 
         return cls(args, src_dict, tgt_dict)
 
